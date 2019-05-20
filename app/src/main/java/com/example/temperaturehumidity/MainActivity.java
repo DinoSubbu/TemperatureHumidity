@@ -24,7 +24,6 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button startScan;
     private Button enableBluetooth;
     static BluetoothAdapter bluetoothAdapter;
 
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        startScan = findViewById(R.id.startScan);
         BtnTemperature = findViewById(R.id.BtnTemp);
         BtnHumidity  = findViewById(R.id.BtnHum);
         enableBluetooth = findViewById(R.id.BtnBluetoothON);
@@ -72,16 +70,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // you can selectively disable BLE-related features.
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Toast.makeText(this, "Device does not support BLE", Toast.LENGTH_SHORT).show();
-            startScan.setClickable(false);
-            enableBluetooth.setClickable(false);
+            enableBluetooth.setVisibility(View.INVISIBLE);
             finish();
         }
 
         if (bluetoothAdapter.isEnabled()) {
-            enableBluetooth.setClickable(false);
+            enableBluetooth.setVisibility(View.INVISIBLE);
         }
 
-        startScan.setOnClickListener(this);
+
         BtnHumidity.setOnClickListener(this);
         BtnTemperature.setOnClickListener(this);
     }

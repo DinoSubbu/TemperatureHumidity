@@ -65,7 +65,7 @@ public class ConnectionActivity extends AppCompatActivity {
     public BluetoothDevice BTdevice;
     public String BTDeviceName;
     public String BTDeviceAddress;
-    public BluetoothGatt mGatt;
+    public static BluetoothGatt mGatt;
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 100000000;
 
@@ -83,7 +83,7 @@ public class ConnectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_connection);
         InfoTextView = findViewById(R.id.InfoText);
         //HumidityValue = findViewById(R.id.Hum);
-        TemperatureValue = findViewById(R.id.Temp);
+        //TemperatureValue = findViewById(R.id.Temp);
         //startScanning();
         //startScanning();
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
@@ -134,7 +134,7 @@ public class ConnectionActivity extends AppCompatActivity {
         }
         InfoTextView.setText("Before Connection " + deviceToConnect.toString() );
 
-        InfoTextView.setText("Found IPVS-Light");
+        InfoTextView.setText("Found IPVS-Weather");
         mGatt = deviceToConnect.connectGatt(ConnectionActivity.this, false, gattCallback);
 
         /*if (mGatt == null) {
@@ -381,19 +381,22 @@ public class ConnectionActivity extends AppCompatActivity {
 
 
 
-
-
-
     @Override
     public void onBackPressed() {
         // your code.
         Toast.makeText(ConnectionActivity.this, "Back Button Pressed",
                 Toast.LENGTH_LONG).show();
-        mGatt.disconnect();
-        Intent goToMainActivity = new Intent(ConnectionActivity.this, MainActivity.class);
+        try {
+            mGatt.disconnect();
+        }
+        catch (Exception e){
+            Log.i("mGatt","mGatt disconnect check");
+        }
+        //Intent goToMainActivity = new Intent(ConnectionActivity.this, MainActivity.class);
         HUMIDITY_BTN_PRESSED = 0;
         TEMPERATURE_BTN_PRESSED = 0;
-        ConnectionActivity.this.startActivity(goToMainActivity);
+        ConnectionActivity.this.finish();
+        //ConnectionActivity.this.startActivity(goToMainActivity);
 
     }
 
