@@ -57,7 +57,7 @@ public class ConnectionActivity extends AppCompatActivity {
     private static final UUID HumidityCharacteristicUUID = UUID.fromString("00002a6f-0000-1000-8000-00805f9b34fb");
     private static final UUID CLIENT_CHARACTERISTIC_CONFIG = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
 
-    String[] FanName = {"F6:B6:2A:79:7B:5D"};
+    String[] FanMac = {"F6:B6:2A:79:7B:5D"};
     //public UUID FanServiceUUID = UUID.fromString("00000001-0000-0000-FDFD-FDFDFDFDFDFD");
     public BluetoothLeScanner bluetoothLeScanner;
 
@@ -66,6 +66,7 @@ public class ConnectionActivity extends AppCompatActivity {
     public String BTDeviceName;
     public String BTDeviceAddress;
     public static BluetoothGatt mGatt;
+    public static BluetoothGatt MGatt;
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 100000000;
 
@@ -116,7 +117,7 @@ public class ConnectionActivity extends AppCompatActivity {
             mBluetoothDeviceList.add(BTdevice);
 
             for (BluetoothDevice eachDevice : mBluetoothDeviceList) {
-                if (eachDevice.getAddress().equals(FanName[0]) ) {
+                if (eachDevice.getAddress().equals(FanMac[0]) ) {
                     InfoTextView.setText("Found IPVS-Light");
                     scanLeDevice(false);// will stop after first device detection
                     connectToDevice(eachDevice);
@@ -255,6 +256,7 @@ public class ConnectionActivity extends AppCompatActivity {
             SystemClock.sleep(100000);
             gatt.readCharacteristic(services.get(1).getCharacteristics().get
                     (0));*/
+            MGatt= gatt;
             BluetoothGattCharacteristic Tempcharacteristic;
             BluetoothGattCharacteristic Humiditycharacteristic;
 
@@ -296,16 +298,13 @@ public class ConnectionActivity extends AppCompatActivity {
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            Log.i("dinesh", "dinesh is here");
 
-            Log.i("dinesh",Integer.toString(TEMPERATURE_BTN_PRESSED) );
             if(TEMPERATURE_BTN_PRESSED==1)
             {
                 if(characteristic == null){
                     Log.i("Nullllll", "Nullllllllll");
                 }
                 //int temperature = characteristic.FORMAT_UINT32;
-                Log.i("dineshTemp", "dinesh is in temp");
                 int temperature = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT16 ,1);
                 //int temperature = Tempcharacteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT16 ,1);
 
@@ -387,7 +386,7 @@ public class ConnectionActivity extends AppCompatActivity {
         Toast.makeText(ConnectionActivity.this, "Back Button Pressed",
                 Toast.LENGTH_LONG).show();
         try {
-            mGatt.disconnect();
+            MGatt.disconnect();
         }
         catch (Exception e){
             Log.i("mGatt","mGatt disconnect check");
